@@ -12,7 +12,7 @@ class User < ApplicationRecord
   validates(
     :email_address,
     format: {
-      with: /\A\S+@\S+\.\S+\a/,
+      with: /\A\S+@\S+\.\S+\z/,
       message: 'must be valid.'
     }
   )
