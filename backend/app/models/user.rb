@@ -9,6 +9,17 @@ class User < ApplicationRecord
     :validatable
   )
 
+  validates(
+    :username,
+    uniqueness: { case_sensitive: false },
+    presence: true,
+    allow_blank: false,
+    format: {
+      with: /\A[a-zA-Z0-9]+\z/,
+      message: "must be all alphanumeric."
+    }
+  )
+
   def generate_jwt
     JWT.encode({
       id: self.id,
