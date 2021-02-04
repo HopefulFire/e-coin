@@ -7,13 +7,6 @@ class User < ApplicationRecord
     }
   )
   validates(
-    :password,
-    format: {
-      with: /\A(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])[\S]{8,21}\z/,
-      message: 'Password must be between 8 and 21 characters and must have one upper and lowercase letter and one number.'
-    }
-  )
-  validates(
     :email,
     format: {
       with: /\A\S+@\S+\.\S+\a/,
