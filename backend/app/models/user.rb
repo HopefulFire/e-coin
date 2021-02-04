@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  has_one :account
+
   validates(
     :username,
     format: {
