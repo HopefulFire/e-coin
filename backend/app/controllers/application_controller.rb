@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::API
+  respond_to :json
   before_action :underscore_params
   
   private
