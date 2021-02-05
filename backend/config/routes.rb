@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       controllers: { sessions: :sessions },
       path_names: { sign_in: :login }
     )
+    resource :user, only: %i[show update]
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
