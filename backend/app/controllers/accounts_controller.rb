@@ -13,6 +13,6 @@ class AccountsController < ApplicationController
 
   def find_account
     @account = Account.find_by(id: params[:id])
-    render json: { error: "No such account" } unless @account
+    render json: { error: 'No such account' } unless @account
   end
 end
