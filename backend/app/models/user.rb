@@ -17,12 +17,4 @@ class User < ApplicationRecord
       message: 'must be a valid email.'
     }
   )
-  validates(
-    :password,
-    presence: true,
-    format: {
-      with: /\A(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8, 21}\z/,
-      message: 'must be a strong password.'
-    }
-  )
 end

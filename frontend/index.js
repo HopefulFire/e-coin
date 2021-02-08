@@ -3,25 +3,24 @@ const HEADERS = {
 	"Accept": "application/json"
 };
 
-fetch(
-	"http://localhost:3000/api/users/sign_up"
-).then((response) => {
-	return response.json();
-}).then((newUser) => {
-	console.log(newUser);
-	newUser.username = "Fred";
-	newUser.email = "fred@gmail.com";
-	newUser.password = "frediscool";
-	return fetch(
-		"http://localhost:3000/api/users",
-		{
-			method: "POST",
-			headers: HEADERS,
-			body: JSON.stringify(newUser)
-		}
-	);
+const USER = {
+	username: "sam",
+	email: "sam@gmail.com",
+	password: "Sammyilove123!",
+	password_confirmation: "Sammyilove123!"
+};
+
+const AUTH = {
+	email: "sam@gmail.com",
+	password: "Sammyilove123!"
+}
+
+fetch("http://localhost:3000/api/auth/login", {
+	method: "POST",
+	headers: HEADERS,
+	body: JSON.stringify(AUTH)
 }).then((response) => {
 	return response.json();
-}).then((createdUser) => {
-	console.log(createdUser);
+}).then((token) => {
+	console.log(token);
 });
