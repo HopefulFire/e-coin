@@ -23,4 +23,15 @@ fetch("http://localhost:3000/api/auth/login", {
 	return response.json();
 }).then((token) => {
 	console.log(token);
+	return fetch("http://localhost:3000/api/users/1", {
+		method: "GET",
+		headers: {
+			Authorization: token.token,
+			...HEADERS
+		}
+	});
+}).then((response) => {
+	return response.json();
+}).then((user) => {
+	console.log(user);
 });
