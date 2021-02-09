@@ -1,4 +1,5 @@
 class AccountsController < ApplicationController
+  before_action :authorize_request
   before_action :find_account, only: %i[show update destroy]
 
   def index
@@ -13,6 +14,8 @@ class AccountsController < ApplicationController
 
   def find_account
     @account = Account.find_by(id: params[:id])
-    render json: { error: 'No such account' } unless @account
+    return render json: { error: 'No such account' }, status: :not_found unless @account
+
+    return render json: { error: 'Not your account'}
   end
 end
