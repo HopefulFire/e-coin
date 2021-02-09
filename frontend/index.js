@@ -33,8 +33,8 @@ class Session {
 		logIn.addEventListener("submit", (e) => {
 			e.preventDefault();
 			this.login(
-				document.getElementById("email-input"),
-				document.getElementById("password-input")
+				document.getElementById("email-input").value,
+				document.getElementById("password-input").value
 			).then(() => {
 				this.startup();
 			});
