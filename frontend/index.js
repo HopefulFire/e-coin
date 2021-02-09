@@ -53,7 +53,7 @@ class Session {
 			{label: "Password: ", input: "password-input", type: "password"},
 			{label: "Confirm Password: ", input: "confirm-password-input", type: "password"}
 		];
-		for (inputLabel of inputLabels) {
+		for (const inputLabel of inputLabels) {
 			const label = document.createElement("label");
 			const input = document.createElement("input");
 
