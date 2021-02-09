@@ -46,50 +46,27 @@ class Session {
 		this.clearMain();
 		this.createNavbar();
 		const signUp = document.createElement("form");
-		
-		const usernameLabel = document.createElement("label");
-		usernameLabel.innerText = "Username: ";
-		usernameLabel.htmlFor = "username-input";
-		signUp.appendChild(usernameLabel);
 
-		const usernameInput = document.createElement("input");
-		usernameInput.id = "username-input";
-		usernameInput.name = "username-input";
-		usernameInput.type = "text";
-		signUp.appendChild(usernameInput);
+		const inputLabels = [
+			{label: "Username: ", input: "username-input", type: "text"},
+			{label: "Email: ", input: "email-input", type: "email"},
+			{label: "Password: ", input: "password-input", type: "password"},
+			{label: "Confirm Password: ", input: "confirm-password-input", type: "password"}
+		];
+		for (inputLabel of inputLabels) {
+			const label = document.createElement("label");
+			const input = document.createElement("input");
 
-		const emailLabel = document.createElement("label");
-		emailLabel.innerText = "Email: ";
-		emailLabel.htmlFor = "email-input";
-		signUp.appendChild(emailLabel);
+			label.innerText = inputLabel.label;
+			label.htmlFor = inputLabel.input;
 
-		const emailInput = document.createElement("input");
-		emailInput.id = "email-input";
-		emailInput.name = "email-input";
-		emailInput.type = "text";
-		signUp.appendChild(emailInput);
+			input.id = inputLabel.input;
+			input.name = inputLabel.input;
+			input.type = inputLabel.type;
 
-		const passwordLabel = document.createElement("label");
-		passwordLabel.innerText = "Password: ";
-		passwordLabel.htmlFor = "password-input";
-		signUp.appendChild(passwordLabel);
-
-		const passwordInput = document.createElement("input");
-		passwordInput.id = "password-input";
-		passwordInput.name = "password-input";
-		passwordInput.type = "password";
-		signUp.appendChild(passwordInput);
-
-		const passwordConfirmationLabel = document.createElement("label");
-		passwordConfirmationLabel.innerText = "Confirm Password: ";
-		passwordConfirmationLabel.htmlFor = "confirm-password-input";
-		signUp.appendChild(passwordConfirmationLabel);
-
-		const passwordConfirmationInput = document.createElement("input");
-		passwordConfirmationInput.id = "confirm-password-input";
-		passwordConfirmationInput.name = "confirm-password-input";
-		passwordConfirmationInput.type = "password";
-		signUp.appendChild(passwordConfirmationInput);
+			signUp.appendChild(label);
+			signUp.appendChild(input);
+		}
 
 		const submitInput = document.createElement("input");
 		submitInput.type = "submit";
@@ -99,10 +76,10 @@ class Session {
 		signUp.addEventListener("submit", (e) => {
 			e.preventDefault();
 			this.signUpAndLogin(
-				usernameInput.value,
-				emailInput.value,
-				passwordInput.value,
-				passwordConfirmationInput.value
+				document.getElementById("username-input").value,
+				document.getElementById("email-input").value,
+				document.getElementById("password-input").value,
+				document.getElementById("confirm-password-input").value
 			);
 		});
 
