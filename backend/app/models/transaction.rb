@@ -3,7 +3,7 @@ class Transaction < ApplicationRecord
 
   scope :sent_and_received_transactions, -> (user) do
     where(
-      'sender_id = ? OR receiver_id = ? AND confirmed = ?',
+      '(sender_id = ? OR receiver_id = ?) AND confirmed = ?',
       user.id,
       user.id,
       true
