@@ -113,10 +113,26 @@ class Session {
 			`Username: ${this.username}`,
 			`Email: ${this.email}`
 		];
-		for (property of userProperties) {
+		for (const property of userProperties) {
 			const pTag = document.createElement("p");
 			pTag.innerText = property;
 			this.mainTag.appendChild(pTag);
+		}
+	}
+	getUserInfo() {
+		if (this.id) {
+			return fetch(`${this.BASEURL}/users/${this.id}`, {
+				method: "GET",
+				headers: this.authorizedHeaders
+			}).then((response) => {
+				return response.json();
+			}).then((userInfo) => {
+				this.id = userInfo.id;
+				this.username = userInfo.username;
+				this.email = userInfo.email;
+				this.account = userInfo.account;
+				return;
+			});
 		}
 	}
 	login(email, password) {
@@ -132,7 +148,8 @@ class Session {
 			return response.json();
 		}).then((tokenInfo) => {
 			this.authorization = tokenInfo.token;
-			return;
+			this.id = tokenInfo.id;
+			return this.getUserInfo();
 		});
 	}
 	signUp(username, email, password, passwordConfirmation) {
@@ -195,4 +212,4 @@ class Session {
 	}
 }
 
-const session = new Session();
+new Session();
