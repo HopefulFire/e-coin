@@ -7,15 +7,17 @@ class AccountsController < ApplicationController
   end
 
   def destroy
-    @account.destroy
+    if @account.balance == 0
+      render json: { message: 'Account destroyed' }, status: :accepted if @account.destroy
+    else
+      render json: { error: 'Account not zeroed' }, status: :forbidden
+    end
   end
 
   private
 
   def find_account
-    @account = Account.find_by(id: params[:id])
+    @account = @current_user.account
     return render json: { error: 'No such account' }, status: :not_found unless @account
-
-    return render json: { error: 'Not your account'}
   end
 end
