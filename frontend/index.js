@@ -38,6 +38,7 @@ class Session {
 				e.preventDefault();
 				this.createUserPage(); // TODO
 			});
+			navbar.appendChild(userPage)
 		}
 
 		this.mainTag.appendChild(navbar);
