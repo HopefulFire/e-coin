@@ -1,11 +1,11 @@
 Rails.application.routes.draw do
   scope :api, defaults: { format: :json } do
-    get '/accounts', to: 'account#index'
+    get '/accounts', to: 'accounts#index'
     resources :users do
-      get '/account', to: 'account#show'
-      post '/account', to: 'account#create'
-      delete '/account', to: 'account#destroy'
-      resources :transactions
+      get '/account', to: 'accounts#show'
+      post '/account', to: 'accounts#create'
+      delete '/account', to: 'accounts#destroy'
+      resources :transactions, only: %i[index show create destroy]
     end
     post '/auth/login', to: 'authentication#login'
   end
