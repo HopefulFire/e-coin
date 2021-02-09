@@ -113,7 +113,7 @@ class Session {
 			`Username: ${this.username}`,
 			`Email: ${this.email}`
 		];
-		for (property of userPropertyValues) {
+		for (property of userProperties) {
 			const pTag = document.createElement("p");
 			pTag.innerText = property;
 			this.mainTag.appendChild(pTag);
@@ -132,6 +132,7 @@ class Session {
 			return response.json();
 		}).then((tokenInfo) => {
 			this.authorization = tokenInfo.token;
+			return;
 		});
 	}
 	signUp(username, email, password, passwordConfirmation) {
