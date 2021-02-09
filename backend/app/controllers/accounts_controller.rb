@@ -7,7 +7,7 @@ class AccountsController < ApplicationController
   end
 
   def create
-    @current_user.account = Account.new(balance: 1000)
+    @current_user.account = Account.new(balance: 1000) unless @current_user.account
   end
 
   def destroy
