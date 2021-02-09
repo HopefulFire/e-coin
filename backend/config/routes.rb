@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :transactions
   scope :api, defaults: { format: :json } do
     resources :accounts
     resources :users
