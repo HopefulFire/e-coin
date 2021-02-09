@@ -108,7 +108,20 @@ class Session {
 
 		this.mainTag.appendChild(signUp);
 	}
-
+	createUserPage() {
+		this.clearMain();
+		this.createNavbar();
+		const userProperties = [
+			`ID: ${this.id}`,
+			`Username: ${this.username}`,
+			`Email: ${this.email}`
+		];
+		for (property of userPropertyValues) {
+			const pTag = document.createElement("p");
+			pTag.innerText = property;
+			this.mainTag.appendChild(pTag);
+		}
+	}
 	login(email, password) {
 		const credentials = {
 			email: email,
