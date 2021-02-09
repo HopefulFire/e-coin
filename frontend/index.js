@@ -7,10 +7,38 @@ class Session {
 		};
 		this.authorization = authorization;
 
-		this.createNavbar();
+		this.startup();
 	}
+
 	clearMain() {
 		this.mainTag.innerHTML = "";
+	}
+	createLogIn() {
+		this.startup();
+
+		const logIn = document.createElement("form");
+
+		const labelInputs = [
+			{label: "Email: ", input: "email-input", type: "email"},
+			{label: "Password: ", input: "password-input", type: "password"}
+		];
+
+		this.util.buildFormLabelInputs(logIn, labelInputs);
+
+		const submitInput = document.createElement("input");
+		submitInput.type = "submit";
+		submitInput.value = "Log In";
+		logIn.appendChild(submitInput);
+
+		logIn.addEventListener("submit", (e) => {
+			e.preventDefault();
+			this.login(
+				document.getElementById("email-input"),
+				document.getElementById("password-input")
+			).then(() => {
+				this.startup();
+			});
+		});
 	}
 	createNavbar() {
 		const navbar = document.createElement("nav");
@@ -48,26 +76,14 @@ class Session {
 		this.createNavbar();
 		const signUp = document.createElement("form");
 
-		const inputLabels = [
+		const labelInputs = [
 			{label: "Username: ", input: "username-input", type: "text"},
 			{label: "Email: ", input: "email-input", type: "email"},
 			{label: "Password: ", input: "password-input", type: "password"},
 			{label: "Confirm Password: ", input: "confirm-password-input", type: "password"}
 		];
-		for (const inputLabel of inputLabels) {
-			const label = document.createElement("label");
-			const input = document.createElement("input");
-
-			label.innerText = inputLabel.label;
-			label.htmlFor = inputLabel.input;
-
-			input.id = inputLabel.input;
-			input.name = inputLabel.input;
-			input.type = inputLabel.type;
-
-			signUp.appendChild(label);
-			signUp.appendChild(input);
-		}
+		
+		this.util.buildFormLabelInputs(signUp, labelInputs);
 
 		const submitInput = document.createElement("input");
 		submitInput.type = "submit";
@@ -81,14 +97,15 @@ class Session {
 				document.getElementById("email-input").value,
 				document.getElementById("password-input").value,
 				document.getElementById("confirm-password-input").value
-			);
+			).then(() => {
+				this.startup();
+			});
 		});
 
 		this.mainTag.appendChild(signUp);
 	}
 	createUserPage() {
-		this.clearMain();
-		this.createNavbar();
+		this.startup();
 		const userProperties = [
 			`ID: ${this.id}`,
 			`Username: ${this.username}`,
@@ -143,12 +160,35 @@ class Session {
 			return this.login(email, password);
 		});
 	}
+	startup() {
+		this.clearMain();
+		this.createNavbar();
+	}
 
 	get authorizedHeaders() {
 		return {Authorization: this.authorization, ...this.HEADERS};
 	}
 	get mainTag() {
 		return document.getElementById("main");
+	}
+
+	util = {
+		buildFormLabelInputs: (form, labelInputs) => {
+			for (const labelInput of labelInputs) {
+				const label = document.createElement("label");
+				const input = document.createElement("input");
+
+				label.innerText = labelInput.label;
+				label.htmlFor = labelInput.input;
+
+				input.id = labelInput.input;
+				input.name = labelInput.input;
+				input.type = labelInput.type;
+
+				form.appendChild(label);
+				form.appendChild(input);
+			}
+		},
 	}
 }
 
