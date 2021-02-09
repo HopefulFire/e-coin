@@ -45,22 +45,6 @@ class Session {
 	createNavbar() {
 		const navbar = document.createElement("nav");
 
-		const logIn = document.createElement("button");
-		logIn.innerText = "Log In";
-		logIn.addEventListener("click", (e) => {
-			e.preventDefault();
-			this.createLogIn();
-		});
-		navbar.appendChild(logIn);
-
-		const signUp = document.createElement("button");
-		signUp.innerText = "Sign Up";
-		signUp.addEventListener("click", (e) => {
-			e.preventDefault();
-			this.createSignUp();
-		});
-		navbar.appendChild(signUp);
-
 		if (this.username) {
 			const userPage = document.createElement("button");
 			userPage.innerText = this.username;
@@ -69,6 +53,22 @@ class Session {
 				this.createUserPage(); // TODO
 			});
 			navbar.appendChild(userPage)
+		} else {
+			const logIn = document.createElement("button");
+			logIn.innerText = "Log In";
+			logIn.addEventListener("click", (e) => {
+				e.preventDefault();
+				this.createLogIn();
+			});
+			navbar.appendChild(logIn);
+
+			const signUp = document.createElement("button");
+			signUp.innerText = "Sign Up";
+			signUp.addEventListener("click", (e) => {
+				e.preventDefault();
+				this.createSignUp();
+			});
+			navbar.appendChild(signUp);
 		}
 
 		this.mainTag.appendChild(navbar);
