@@ -39,6 +39,8 @@ class Session {
 				this.startup();
 			});
 		});
+
+		this.mainTag.appendChild(logIn);
 	}
 	createNavbar() {
 		const navbar = document.createElement("nav");
@@ -47,7 +49,7 @@ class Session {
 		logIn.innerText = "Log In";
 		logIn.addEventListener("click", (e) => {
 			e.preventDefault();
-			console.log("Log In");
+			this.createLogIn();
 		});
 		navbar.appendChild(logIn);
 
