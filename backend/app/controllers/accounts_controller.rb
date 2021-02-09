@@ -18,6 +18,6 @@ class AccountsController < ApplicationController
 
   def find_account
     @account = @current_user.account
-    return render json: { error: 'No such account' }, status: :not_found unless @account
+    render json: { error: 'No such account' }, status: :not_found unless @account
   end
 end
