@@ -6,6 +6,15 @@ class TransactionsController < ApplicationController
     @transactions = Transaction.sent_and_received_transactions(@current_user)
   end
 
+  def create
+    transaction = Transaction.new(transaction_params)
+    if transaction.save
+      render json: transaction, status: :created
+    else
+      render json: { errors: transaction.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def find_transaction
@@ -15,5 +24,9 @@ class TransactionsController < ApplicationController
     unless @transaction.sender == @current_user || @transaction.receiver == @current_user
       render json: { error: 'unauthorized' }, status: :unauthorized
     end
+  end
+
+  def transaction_params
+    params.permit(:sender_id, :receiver_id, :amount).merge(confirmed: false)
   end
 end
