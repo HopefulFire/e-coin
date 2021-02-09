@@ -156,7 +156,7 @@ class Session {
 		}
 	}
 	signUpAndLogin(username, email, password, passwordConfirmation) {
-		this.signUp(username, email, password, passwordConfirmation).then((response) => {
+		return this.signUp(username, email, password, passwordConfirmation).then((response) => {
 			return response.json();
 		}).then((confirmation) => {
 			this.id = confirmation.id;
