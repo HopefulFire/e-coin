@@ -6,11 +6,15 @@ class AccountsController < ApplicationController
     @accounts = Account.all
   end
 
+  def create
+    @current_user.account = Account.new(balance: 1000)
+  end
+
   def destroy
-    if @account.balance == 0
+    if @account.balance <= 0
       render json: { message: 'Account destroyed' }, status: :accepted if @account.destroy
     else
-      render json: { error: 'Account not zeroed' }, status: :forbidden
+      render json: { error: 'Account not zeroed or better' }, status: :forbidden
     end
   end
 
