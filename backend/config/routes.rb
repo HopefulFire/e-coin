@@ -4,7 +4,6 @@ Rails.application.routes.draw do
     resources :users do
       get '/account', to: 'account#show'
       post '/account', to: 'account#create'
-      patch '/account', to: 'account#update'
       delete '/account', to: 'account#destroy'
       resources :transactions
     end

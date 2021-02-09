@@ -1,6 +1,6 @@
 class AccountsController < ApplicationController
   before_action :authorize_request
-  before_action :find_account, only: %i[show update destroy]
+  before_action :find_account, only: %i[show destroy]
 
   def index
     @accounts = Account.all
