@@ -7,34 +7,44 @@ class Session {
 		};
 		this.authorization = authorization;
 
-		this.chooseLogInOrSignUp();
+		this.createNavbar();
 	}
+	clearMain() {
+		this.mainTag.innerHTML = "";
+	}
+	createNavbar() {
+		const navbar = document.createElement("nav");
 
-	chooseLogInOrSignUp() {
 		const logIn = document.createElement("button");
 		logIn.innerText = "Log In";
 		logIn.addEventListener("click", (e) => {
 			e.preventDefault();
 			console.log("Log In");
 		});
-		this.mainTag.appendChild(logIn);
-		
+		navbar.appendChild(logIn);
+
 		const signUp = document.createElement("button");
 		signUp.innerText = "Sign Up";
 		signUp.addEventListener("click", (e) => {
 			e.preventDefault();
 			this.createSignUp();
 		});
-		this.mainTag.appendChild(signUp);
-	}
+		navbar.appendChild(signUp);
 
-	clearMain() {
-		this.mainTag.innerHTML = "";
-	}
+		if (this.username) {
+			const userPage = document.createElement("button");
+			userPage.innerText = this.username;
+			userPage.addEventListener("click", (e) => {
+				e.preventDefault();
+				this.createUserPage(); // TODO
+			});
+		}
 
+		this.mainTag.appendChild(navbar);
+	}
 	createSignUp() {
 		this.clearMain();
-		this.chooseLogInOrSignUp();
+		this.createNavbar();
 		const signUp = document.createElement("form");
 		
 		const usernameLabel = document.createElement("label");
@@ -114,7 +124,6 @@ class Session {
 			this.authorization = tokenInfo.token;
 		});
 	}
-
 	signUp(username, email, password, passwordConfirmation) {
 		this.username = username;
 		this.email = email;
@@ -135,7 +144,6 @@ class Session {
 			this.createSignUp();
 		}
 	}
-
 	signUpAndLogin(username, email, password, passwordConfirmation) {
 		this.signUp(username, email, password, passwordConfirmation).then((response) => {
 			return response.json();
