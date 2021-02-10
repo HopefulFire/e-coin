@@ -1,6 +1,6 @@
 class TransactionsController < ApplicationController
   before_action :authorize_request
-  before_action :find_transaction, only: %[show destroy]
+  before_action :find_transaction, only: %[show update destroy]
 
   def index
     @transactions = Transaction.sent_and_received_transactions(@current_user)
@@ -13,6 +13,30 @@ class TransactionsController < ApplicationController
     else
       render json: { errors: transaction.errors.full_messages }, status: :unprocessable_entity
     end
+  end
+
+  def update
+    return render json: { error: 'unauthorized' }, status: :unauthorized if @current_user != @transaction.receiver
+    
+    return render json: { error: 'forbidden' }, status: :forbidden if transaction.confirmed
+
+    if params[:blocked]
+      @transaction.blocked = true
+      return render json: { message: 'transaction successfully blocked' }, status: :accepted if @transaction.save
+
+      return render json: { errors: @transaction.errors.full_messages }, status: :internal_server_error
+    end
+
+    @transaction.sender.account.balance -= @transaction.amount
+    @transaction.receiver.account.balance += @transaction.amount
+    @transaction.confirmed = true
+    unless @transaction.save
+      @transaction.receiver.account.balance -= @transaction.amount
+      @transaction.sender.account.balance += @transaction.amount
+      return render json: { errors: @transaction.errors.full_messages }, status: :internal_server_error
+    end
+
+    render json: { message: 'success', balance: "#{@current_user.account.balance}" }, status: :accepted
   end
 
   private
