@@ -4,6 +4,7 @@ class User < ApplicationRecord
   validates(
     :username,
     presence: true,
+    uniqueness: true,
     format: {
       with: /\A\w{3,21}\z/,
       message: 'only allows letters between 3 and 21 in length.'
@@ -12,6 +13,7 @@ class User < ApplicationRecord
   validates(
     :email,
     presence: true,
+    uniqueness: true,
     format: {
       with: /\A\S+@\S+\.\S+\z/,
       message: 'must be a valid email.'
