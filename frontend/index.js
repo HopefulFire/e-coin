@@ -190,7 +190,7 @@ class Session {
 		}).then((response) => {
 			return response.json();
 		}).then((account) => {
-			this.account = account.account;
+			this.account = account;
 			return;
 		});
 	}
