@@ -60,6 +60,6 @@ class TransactionsController < ApplicationController
   end
 
   def transaction_params
-    params.permit(:sender_id, :receiver_id, :amount).merge(confirmed: false, blocked: false)
+    params.permit(:receiver_id, :amount).merge(sender_id: @current_user.id, confirmed: false, blocked: false)
   end
 end

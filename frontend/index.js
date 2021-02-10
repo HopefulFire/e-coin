@@ -21,13 +21,24 @@ class Session {
 			const balanceH3 = document.createElement("h3");
 			balanceH3.innerText = `Your Balance Is: #${this.account.balance}`;
 			this.mainTag.appendChild(balanceH3);
-			// want to create transactions here
+			
+			const newTransaction = document.createElement("form");
+
+			const labelInputs = [
+				{label: "Transfer Account ID: ", input: "account-id-input", type: "password"},
+				{label: "Transfer Amount: ", input: "amount-input", type: "number"}
+			];
+
+			this.util.buildFormLabelInputs(newTransaction, labelInputs, "New Transaction");
+
+			this.mainTag.appendChild(newTransaction);
 		} else {
 			const createAccount = document.createElement("button");
 			createAccount.innerText = "Create An Account"
 			createAccount.addEventListener("click", () => {
-				this.postAccount();
-				this.createAccountPage();
+				this.postAccount().then(() => {
+					this.createAccountPage()
+				});
 			});
 			this.mainTag.appendChild(createAccount)
 		}
@@ -42,12 +53,7 @@ class Session {
 			{label: "Password: ", input: "password-input", type: "password"}
 		];
 
-		this.util.buildFormLabelInputs(logIn, labelInputs);
-
-		const submitInput = document.createElement("input");
-		submitInput.type = "submit";
-		submitInput.value = "Log In";
-		logIn.appendChild(submitInput);
+		this.util.buildFormLabelInputs(logIn, labelInputs, "Log In");
 
 		logIn.addEventListener("submit", (e) => {
 			e.preventDefault();
@@ -63,6 +69,7 @@ class Session {
 	}
 	createNavbar() {
 		const navbar = document.createElement("nav");
+		navbar.className = "text-center"
 
 		if (this.username) {
 			const userPage = document.createElement("button");
@@ -115,12 +122,7 @@ class Session {
 			{label: "Confirm Password: ", input: "confirm-password-input", type: "password"}
 		];
 		
-		this.util.buildFormLabelInputs(signUp, labelInputs);
-
-		const submitInput = document.createElement("input");
-		submitInput.type = "submit";
-		submitInput.value = "Sign Up";
-		signUp.appendChild(submitInput);
+		this.util.buildFormLabelInputs(signUp, labelInputs, "Sign Up");
 
 		signUp.addEventListener("submit", (e) => {
 			e.preventDefault();
@@ -235,22 +237,35 @@ class Session {
 	}
 
 	util = {
-		buildFormLabelInputs: (form, labelInputs) => {
+		buildFormLabelInputs: (form, labelInputs, submit=null) => {
 			for (const labelInput of labelInputs) {
 				const label = document.createElement("label");
 				const input = document.createElement("input");
 
 				label.innerText = labelInput.label;
 				label.htmlFor = labelInput.input;
+				label.className = "col-5"
 
 				input.id = labelInput.input;
 				input.name = labelInput.input;
 				input.type = labelInput.type;
+				input.className = "col-5";
 
 				form.appendChild(label);
 				form.appendChild(input);
+				this.util.newBr(form)
+			}
+			if (submit) {
+				const submitInput = document.createElement("input");
+				submitInput.type = "submit";
+				submitInput.value = submit;
+				submitInput.className = "btn btn-success"
+				form.appendChild(submitInput);
 			}
 		},
+		newBr: (parent) => {
+			parent.appendChild(document.createElement("br"))
+		}
 	}
 }
 
