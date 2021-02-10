@@ -27,16 +27,18 @@ class TransactionsController < ApplicationController
       return render json: { errors: @transaction.errors.full_messages }, status: :internal_server_error
     end
 
-    @transaction.sender.account.balance -= @transaction.amount
-    @transaction.receiver.account.balance += @transaction.amount
-    @transaction.confirmed = true
-    unless @transaction.save
-      @transaction.receiver.account.balance -= @transaction.amount
-      @transaction.sender.account.balance += @transaction.amount
-      return render json: { errors: @transaction.errors.full_messages }, status: :internal_server_error
+    if params[:confirmed]
+      @transaction.sender.account.balance -= @transaction.amount
+      @transaction.receiver.account.balance += @transaction.amount
+      @transaction.confirmed = true
+      unless @transaction.save
+        @transaction.receiver.account.balance -= @transaction.amount
+        @transaction.sender.account.balance += @transaction.amount
+        return render json: { errors: @transaction.errors.full_messages }, status: :internal_server_error
+      end
+      return render json: { message: 'success', balance: "#{@current_user.account.balance}" }, status: :accepted
     end
-
-    render json: { message: 'success', balance: "#{@current_user.account.balance}" }, status: :accepted
+    render json: { error: 'no valid params' }, status: :expectation_failed
   end
 
   private
