@@ -13,6 +13,23 @@ class Session {
 	clearMain() {
 		this.mainTag.innerHTML = "";
 	}
+	createAccountPage() {
+		this.startup();
+		this.getUserInfo();
+
+		if (this.account.balance || this.account.balance === 0;) {
+			const balanceH3 = document.createElement("h3");
+			balanceH3.innerText = `Your Balance Is: #${this.account.balance}`;
+			this.mainTag.appendChild(balanceH3)
+			// want to create transactions here
+		} else {
+			const createAccount = document.createElement("button");
+			createAccount.innerText = "Create An Account"
+			createAccount.addEventListener("click", () => {
+				this.postAccount(); // TODO
+			})
+		}
+	}
 	createLogIn() {
 		this.startup();
 
@@ -48,24 +65,35 @@ class Session {
 		if (this.username) {
 			const userPage = document.createElement("button");
 			userPage.innerText = this.username;
-			userPage.addEventListener("click", (e) => {
-				e.preventDefault();
-				this.createUserPage(); // TODO
+			userPage.addEventListener("click", () => {
+				this.createUserPage();
 			});
-			navbar.appendChild(userPage)
+			navbar.appendChild(userPage);
+
+			const accountPage = document.createElement("button");
+			accountPage.innerText = "Account";
+			accountPage.addEventListener("click", () => {
+				this.createAccountPage(); // TODO
+			});
+			navbar.appendChild(accountPage);
+
+			const transactionsPage = document.createElement("button");
+			transactionsPage.innerText = "Transactions";
+			transactionsPage.addEventListener("click", () => {
+				this.createTransactionsPage(); // TODO
+			});
+			navbar.appendChild(transactionsPage);
 		} else {
 			const logIn = document.createElement("button");
 			logIn.innerText = "Log In";
-			logIn.addEventListener("click", (e) => {
-				e.preventDefault();
+			logIn.addEventListener("click", () => {
 				this.createLogIn();
 			});
 			navbar.appendChild(logIn);
 
 			const signUp = document.createElement("button");
 			signUp.innerText = "Sign Up";
-			signUp.addEventListener("click", (e) => {
-				e.preventDefault();
+			signUp.addEventListener("click", () => {
 				this.createSignUp();
 			});
 			navbar.appendChild(signUp);
