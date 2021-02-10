@@ -42,6 +42,10 @@ class TransactionsController < ApplicationController
   end
 
   def destroy
+    return render json: { error: 'already went through' }, status: :forbidden if @transaction.confirmed
+
+    @transaction.destroy
+    render json: { message: 'successfully cancelled' }, status: :accepted
   end
 
   private
