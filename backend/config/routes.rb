@@ -5,7 +5,7 @@ Rails.application.routes.draw do
       get '/account', to: 'accounts#show'
       post '/account', to: 'accounts#create'
       delete '/account', to: 'accounts#destroy'
-      resources :transactions, only: %i[index show create destroy]
+      resources :transactions
     end
     post '/auth/login', to: 'authentication#login'
   end
