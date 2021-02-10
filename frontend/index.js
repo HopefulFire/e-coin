@@ -17,17 +17,19 @@ class Session {
 		this.startup();
 		this.getUserInfo();
 
-		if (this.account.balance instanceof Number) {
+		if (this.account.balance === 0 || this.account.balance) {
 			const balanceH3 = document.createElement("h3");
 			balanceH3.innerText = `Your Balance Is: #${this.account.balance}`;
-			this.mainTag.appendChild(balanceH3)
+			this.mainTag.appendChild(balanceH3);
 			// want to create transactions here
 		} else {
 			const createAccount = document.createElement("button");
 			createAccount.innerText = "Create An Account"
 			createAccount.addEventListener("click", () => {
-				this.postAccount(); // TODO
-			})
+				this.postAccount();
+				this.createAccountPage();
+			});
+			this.mainTag.appendChild(createAccount)
 		}
 	}
 	createLogIn() {
@@ -73,7 +75,7 @@ class Session {
 			const accountPage = document.createElement("button");
 			accountPage.innerText = "Account";
 			accountPage.addEventListener("click", () => {
-				this.createAccountPage(); // TODO
+				this.createAccountPage();
 			});
 			navbar.appendChild(accountPage);
 
@@ -181,14 +183,14 @@ class Session {
 		});
 	}
 	postAccount() {
-		return fetch(`${this.BASEURL}/accounts`, {
+		return fetch(`${this.BASEURL}/users/${this.id}/account`, {
 			method: "POST",
 			headers: this.authorizedHeaders,
 			body: JSON.stringify()
 		}).then((response) => {
 			return response.json();
 		}).then((account) => {
-			this.account = account;
+			this.account = account.account;
 			return;
 		});
 	}
