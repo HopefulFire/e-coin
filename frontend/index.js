@@ -31,6 +31,13 @@ class Session {
 
 			this.util.buildFormLabelInputs(newTransaction, labelInputs, "New Transaction");
 
+			newTransaction.addEventListener("submit", (e) => {
+				e.preventDefault();
+				this.postTransaction().then(() => { // TODO
+					this.createTransactionsPage(); // TODO
+				});
+			});
+
 			this.mainTag.appendChild(newTransaction);
 		} else {
 			const createAccount = document.createElement("button");
@@ -111,8 +118,7 @@ class Session {
 		this.mainTag.appendChild(navbar);
 	}
 	createSignUp() {
-		this.clearMain();
-		this.createNavbar();
+		this.startup();
 		const signUp = document.createElement("form");
 
 		const labelInputs = [
@@ -137,6 +143,9 @@ class Session {
 		});
 
 		this.mainTag.appendChild(signUp);
+	}
+	createTransactionsPage() {
+		this.startup();
 	}
 	createUserPage() {
 		this.startup();
@@ -240,23 +249,18 @@ class Session {
 		buildFormLabelInputs: (form, labelInputs, submit=null) => {
 			
 			for (const labelInput of labelInputs) {
-				const initialSpan = document.createElement("span");
 				const label = document.createElement("label");
 				const input = document.createElement("input");
 
-				initialSpan.innerText = "FOO";
-				initialSpan.className = "col-sm-2";
-
 				label.innerText = labelInput.label;
 				label.htmlFor = labelInput.input;
-				label.className = "col-sm-5";
+				label.className = "col-5";
 
 				input.id = labelInput.input;
 				input.name = labelInput.input;
 				input.type = labelInput.type;
-				input.className = "col-sm-5";
+				input.className = "col-5";
 
-				form.appendChild(initialSpan);
 				form.appendChild(label);
 				form.appendChild(input);
 			}
@@ -267,7 +271,7 @@ class Session {
 				submitInput.className = "btn btn-success";
 				form.appendChild(submitInput);
 			}
-		}
+		},
 	}
 }
 
