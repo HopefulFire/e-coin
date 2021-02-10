@@ -238,33 +238,35 @@ class Session {
 
 	util = {
 		buildFormLabelInputs: (form, labelInputs, submit=null) => {
+			
 			for (const labelInput of labelInputs) {
+				const initialSpan = document.createElement("span");
 				const label = document.createElement("label");
 				const input = document.createElement("input");
 
+				initialSpan.innerText = "FOO";
+				initialSpan.className = "col-sm-2";
+
 				label.innerText = labelInput.label;
 				label.htmlFor = labelInput.input;
-				label.className = "col-5"
+				label.className = "col-sm-5";
 
 				input.id = labelInput.input;
 				input.name = labelInput.input;
 				input.type = labelInput.type;
-				input.className = "col-5";
+				input.className = "col-sm-5";
 
+				form.appendChild(initialSpan);
 				form.appendChild(label);
 				form.appendChild(input);
-				this.util.newBr(form)
 			}
 			if (submit) {
 				const submitInput = document.createElement("input");
 				submitInput.type = "submit";
 				submitInput.value = submit;
-				submitInput.className = "btn btn-success"
+				submitInput.className = "btn btn-success";
 				form.appendChild(submitInput);
 			}
-		},
-		newBr: (parent) => {
-			parent.appendChild(document.createElement("br"))
 		}
 	}
 }
