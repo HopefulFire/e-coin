@@ -17,7 +17,7 @@ class Session {
 		this.startup();
 		this.getUserInfo();
 
-		if (this.account.balance || this.account.balance === 0;) {
+		if (this.account.balance instanceof Number) {
 			const balanceH3 = document.createElement("h3");
 			balanceH3.innerText = `Your Balance Is: #${this.account.balance}`;
 			this.mainTag.appendChild(balanceH3)
@@ -178,6 +178,18 @@ class Session {
 			this.authorization = tokenInfo.token;
 			this.id = tokenInfo.id;
 			return this.getUserInfo();
+		});
+	}
+	postAccount() {
+		return fetch(`${this.BASEURL}/accounts`, {
+			method: "POST",
+			headers: this.authorizedHeaders,
+			body: JSON.stringify()
+		}).then((response) => {
+			return response.json();
+		}).then((account) => {
+			this.account = account;
+			return;
 		});
 	}
 	signUp(username, email, password, passwordConfirmation) {

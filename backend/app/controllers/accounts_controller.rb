@@ -8,6 +8,7 @@ class AccountsController < ApplicationController
 
   def create
     @current_user.account = Account.new(balance: 1000) unless @current_user.account
+    render json: { account: @current_user.account }, status: :created
   end
 
   def destroy
