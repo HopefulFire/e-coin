@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 2021_02_09_204010) do
     t.boolean "confirmed"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "blocked"
   end
 
   create_table "users", force: :cascade do |t|
