@@ -14,7 +14,7 @@ class Session {
 		this.mainTag.innerHTML = "";
 	}
 	createAccountPage() {
-		this.startup();
+		this.startup(null);
 		this.getUserInfo();
 
 		if (this.account.balance === 0 || this.account.balance) {
@@ -51,7 +51,7 @@ class Session {
 		}
 	}
 	createLogIn() {
-		this.startup();
+		this.startup(null);
 
 		const logIn = document.createElement("form");
 
@@ -75,6 +75,7 @@ class Session {
 		this.mainTag.appendChild(logIn);
 	}
 	createNavbar() {
+		//DO NOT ADD STARTUP
 		const navbar = document.createElement("nav");
 		navbar.className = "text-center"
 
@@ -118,7 +119,7 @@ class Session {
 		this.mainTag.appendChild(navbar);
 	}
 	createSignUp() {
-		this.startup();
+		this.startup(null);
 		const signUp = document.createElement("form");
 
 		const labelInputs = [
@@ -145,10 +146,10 @@ class Session {
 		this.mainTag.appendChild(signUp);
 	}
 	createTransactionsPage() {
-		this.startup();
+		this.startup("Transactions");
 	}
 	createUserPage() {
-		this.startup();
+		this.startup("User");
 		const userProperties = [
 			`ID: ${this.id}`,
 			`Username: ${this.username}`,
@@ -233,7 +234,16 @@ class Session {
 			return this.login(email, password);
 		});
 	}
-	startup() {
+	startup(page) {
+		if (page) {
+			this.refreshFunction = {
+				Transactions: this.createTransactionsPage(),
+				
+			}[page];
+		} else {
+			this.refreshFunction = () => {};
+		}
+
 		this.clearMain();
 		this.createNavbar();
 	}
