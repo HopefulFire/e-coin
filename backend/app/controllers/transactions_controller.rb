@@ -41,6 +41,9 @@ class TransactionsController < ApplicationController
     render json: { error: 'no valid params' }, status: :expectation_failed
   end
 
+  def destroy
+  end
+
   private
 
   def find_transaction
@@ -53,6 +56,6 @@ class TransactionsController < ApplicationController
   end
 
   def transaction_params
-    params.permit(:sender_id, :receiver_id, :amount).merge(confirmed: false)
+    params.permit(:sender_id, :receiver_id, :amount).merge(confirmed: false, blocked: false)
   end
 end
