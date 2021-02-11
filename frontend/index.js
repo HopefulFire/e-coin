@@ -147,7 +147,7 @@ class Session {
 	}
 	createTransactionsPage() {
 		this.startup(this.createTransactionsPage);
-		
+		this.getTransactions(); // TODO
 	}
 	createUserPage() {
 		this.startup(this.createUserPage);
@@ -161,6 +161,16 @@ class Session {
 			pTag.innerText = property;
 			this.mainTag.appendChild(pTag);
 		}
+	}
+	getTransactions() {
+		return fetch(`${this.BASEURL}/users/${this.id}/transactions`, {
+			method: "GET",
+			headers: this.authorizedHeaders
+		}).then((response) => {
+			return response.json();
+		}).then((transactions) => {
+			this.transactions = transactions;
+		});
 	}
 	getUserInfo() {
 		if (this.id) {
