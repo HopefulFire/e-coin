@@ -50,7 +50,7 @@ class Session {
 			this.mainTag.appendChild(createAccount)
 		}
 	}
-	createLogIn() {
+	createLogInPage() {
 		this.startup(null);
 
 		const logIn = document.createElement("form");
@@ -104,21 +104,21 @@ class Session {
 			const logIn = document.createElement("button");
 			logIn.innerText = "Log In";
 			logIn.addEventListener("click", () => {
-				this.createLogIn();
+				this.createLogInPage();
 			});
 			navbar.appendChild(logIn);
 
 			const signUp = document.createElement("button");
 			signUp.innerText = "Sign Up";
 			signUp.addEventListener("click", () => {
-				this.createSignUp();
+				this.createSignUpPage();
 			});
 			navbar.appendChild(signUp);
 		}
 
 		this.mainTag.appendChild(navbar);
 	}
-	createSignUp() {
+	createSignUpPage() {
 		this.startup(null);
 		const signUp = document.createElement("form");
 
@@ -145,9 +145,31 @@ class Session {
 
 		this.mainTag.appendChild(signUp);
 	}
+	createTransactionPage(transaction) {
+		const Transaction
+	}
 	createTransactionsPage() {
 		this.startup(this.createTransactionsPage);
-		this.getTransactions(); // TODO
+		this.getTransactions().then(() => {
+			for (const transaction of this.transactions) {
+				const transactionATag = document.createElement("a");
+				transactionATag.addEventListener("click", (e) => {
+					e.preventDefault;
+					this.createTransactionPage(transaction); // TODO
+				});
+
+				const transactionProperties = [
+					`Sender: ${transaction.sender_id}`, // make usernames later
+					`Receiver: ${transaction.receiver_id}`
+				];
+
+				for (const property of transactionProperties) {
+					const pTag = document.createElement("p");
+					pTag.innerText = property;
+					transactionATag.append(pTag);
+				}
+			}
+		}); // TODO
 	}
 	createUserPage() {
 		this.startup(this.createUserPage);
@@ -170,6 +192,7 @@ class Session {
 			return response.json();
 		}).then((transactions) => {
 			this.transactions = transactions;
+			return;
 		});
 	}
 	getUserInfo() {
@@ -234,7 +257,7 @@ class Session {
 				body: JSON.stringify(newUser)
 			});
 		} else {
-			this.createSignUp();
+			this.createSignUpPage();
 		}
 	}
 	signUpAndLogin(username, email, password, passwordConfirmation) {
