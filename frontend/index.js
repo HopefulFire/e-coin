@@ -33,8 +33,11 @@ class Session {
 
 			newTransaction.addEventListener("submit", (e) => {
 				e.preventDefault();
-				this.postTransaction().then(() => { // TODO
-					this.createTransactionsPage(); // TODO
+				this.postTransaction({
+					receiver_id: document.getElementById("account-id-input").value,
+					amount: document.getElementById("amount-input").value
+				}).then((transaction) => {
+					this.createTransactionPage(transaction);
 				});
 			});
 
@@ -146,28 +149,36 @@ class Session {
 		this.mainTag.appendChild(signUp);
 	}
 	createTransactionPage(transaction) {
-		const Transaction
+		this.startup(this.createTransactionPage, transaction);
+
+		const transactionProperties = [
+			`ID: ${transaction.id}`,
+			`Amount: ${tranaction.amount}`,
+			`Sender: ${transaction.sender_id}`,
+			`Receiver: ${transaction.receiver_id}`,
+			`Confirmed: ${tranaction.confirmed}`
+		]
+
+		this.util.buildArrayOfProperties(this.mainTag, transactionProperties, "p");
 	}
 	createTransactionsPage() {
 		this.startup(this.createTransactionsPage);
+
 		this.getTransactions().then(() => {
 			for (const transaction of this.transactions) {
 				const transactionATag = document.createElement("a");
 				transactionATag.addEventListener("click", (e) => {
 					e.preventDefault;
-					this.createTransactionPage(transaction); // TODO
+					this.createTransactionPage(transaction);
 				});
 
 				const transactionProperties = [
+					`Amount: ${tranaction.amount}`,
 					`Sender: ${transaction.sender_id}`, // make usernames later
 					`Receiver: ${transaction.receiver_id}`
 				];
 
-				for (const property of transactionProperties) {
-					const pTag = document.createElement("p");
-					pTag.innerText = property;
-					transactionATag.append(pTag);
-				}
+				this.util.buildArrayOfProperties(transactionATag, transactionProperties, "p");
 			}
 		}); // TODO
 	}
@@ -240,6 +251,13 @@ class Session {
 			return;
 		});
 	}
+	postTransaction(transaction) {
+		return fetch(`${this.BASEURL}/users/${this.id}/transactions`, {
+			method: "POST",
+			headers: this.authorizedHeaders,
+			body: JSON.stringify(transaction)
+		});
+	}
 	signUp(username, email, password, passwordConfirmation) {
 		this.username = username;
 		this.email = email;
@@ -268,12 +286,13 @@ class Session {
 			return this.login(email, password);
 		});
 	}
-	startup(pageCallback) {
+	startup(pageCallback=null, args=null) {
 		if (pageCallback) {
 			this.refreshCallback = pageCallback;
 		} else {
 			this.refreshCallback = () => {};
 		}
+		this.refreshArgs = args;
 
 		this.clearMain();
 		this.createNavbar();
@@ -311,6 +330,13 @@ class Session {
 				submitInput.value = submit;
 				submitInput.className = "btn btn-success";
 				form.appendChild(submitInput);
+			}
+		},
+		buildArrayOfProperties: (parent, properties, tag="p") => {
+			for (const property of properties) {
+				const tag = document.createElement(tag);
+				tag.innerText = property;
+				parent.appendChild(tag);
 			}
 		},
 	}
