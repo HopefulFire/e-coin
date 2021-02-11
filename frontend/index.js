@@ -256,6 +256,8 @@ class Session {
 			method: "POST",
 			headers: this.authorizedHeaders,
 			body: JSON.stringify(transaction)
+		}).then((response) => {
+			return response.json();
 		});
 	}
 	signUp(username, email, password, passwordConfirmation) {
