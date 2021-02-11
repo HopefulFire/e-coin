@@ -146,10 +146,11 @@ class Session {
 		this.mainTag.appendChild(signUp);
 	}
 	createTransactionsPage() {
-		this.startup("Transactions");
+		this.startup(this.createTransactionsPage);
+		
 	}
 	createUserPage() {
-		this.startup("User");
+		this.startup(this.createUserPage);
 		const userProperties = [
 			`ID: ${this.id}`,
 			`Username: ${this.username}`,
@@ -234,14 +235,11 @@ class Session {
 			return this.login(email, password);
 		});
 	}
-	startup(page) {
-		if (page) {
-			this.refreshFunction = {
-				Transactions: this.createTransactionsPage(),
-				
-			}[page];
+	startup(pageCallback) {
+		if (pageCallback) {
+			this.refreshCallback = pageCallback;
 		} else {
-			this.refreshFunction = () => {};
+			this.refreshCallback = () => {};
 		}
 
 		this.clearMain();
