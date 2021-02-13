@@ -154,14 +154,14 @@ class Session {
 		const transactionProperties = [
 			`ID: ${transaction.id}`,
 			`Amount: ${transaction.amount}`,
-			`Sender: ${transaction.sender}`,
-			`Receiver: ${transaction.receiver}`,
+			`Sender ID: ${transaction.sender_id}`,
+			`Receiver ID: ${transaction.receiver_id}`,
 			`Confirmed: ${transaction.confirmed}`
 		]
 
 		this.util.buildArrayOfProperties(this.mainTag, transactionProperties, "p");
 
-		if (transaction.receiver === this.username) {
+		if (transaction.receiver_id === this.id) {
 			const confirm = document.createElement("button");
 			confirm.innerText = "Confirm";
 			confirm.className = "btn btn-success";
@@ -188,8 +188,8 @@ class Session {
 
 				const transactionProperties = [
 					`Amount: ${transaction.amount}`,
-					`Sender: ${transaction.sender}`, // make usernames later
-					`Receiver: ${transaction.receiver}`
+					`Sender ID: ${transaction.sender_id}`,
+					`Receiver ID: ${transaction.receiver_id}`
 				];
 
 				this.util.buildArrayOfProperties(transactionATag, transactionProperties, "p");
