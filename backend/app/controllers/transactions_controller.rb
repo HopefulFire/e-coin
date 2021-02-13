@@ -1,9 +1,14 @@
 class TransactionsController < ApplicationController
   before_action :authorize_request
-  before_action :find_transaction, only: %[show update destroy]
+  before_action :find_transaction, only: %i[show update destroy]
 
   def index
     @transactions = Transaction.sent_and_received_transactions(@current_user)
+    render json: @transactions, status: :ok
+  end
+
+  def show
+    render json: @transaction, status: :ok
   end
 
   def create
@@ -16,27 +21,27 @@ class TransactionsController < ApplicationController
   end
 
   def update
-    return render json: { error: 'unauthorized' }, status: :unauthorized if @current_user != @transaction.receiver
-    
-    return render json: { error: 'forbidden' }, status: :forbidden if transaction.confirmed
+    return render json: { error: 'forbidden' }, status: :forbidden if @transaction.confirmed
 
-    if params[:blocked]
+    if created_transaction_params[:blocked]
       @transaction.blocked = true
       return render json: { message: 'transaction successfully blocked' }, status: :accepted if @transaction.save
 
       return render json: { errors: @transaction.errors.full_messages }, status: :internal_server_error
     end
 
-    if params[:confirmed]
+    if created_transaction_params[:confirmed]
       @transaction.sender.account.balance -= @transaction.amount
       @transaction.receiver.account.balance += @transaction.amount
       @transaction.confirmed = true
-      unless @transaction.save
+      unless @transaction.save && @transaction.sender.account.save && @transaction.receiver.account.save
         @transaction.receiver.account.balance -= @transaction.amount
         @transaction.sender.account.balance += @transaction.amount
+        @transaction.receiver.account.save
+        @transaction.sender.account.save
         return render json: { errors: @transaction.errors.full_messages }, status: :internal_server_error
       end
-      return render json: { message: 'success', balance: "#{@current_user.account.balance}" }, status: :accepted
+      return render json: @transaction, status: :accepted
     end
     render json: { error: 'no valid params' }, status: :expectation_failed
   end
@@ -51,7 +56,7 @@ class TransactionsController < ApplicationController
   private
 
   def find_transaction
-    @transaction = Transaction.find_by(params[:id])
+    @transaction = Transaction.find_by(id: created_transaction_params[:id])
     return render json: { error: 'No such transaction' }, status: :not_found unless @transaction
 
     unless @transaction.sender == @current_user || @transaction.receiver == @current_user
@@ -61,5 +66,9 @@ class TransactionsController < ApplicationController
 
   def transaction_params
     params.permit(:receiver_id, :amount).merge(sender_id: @current_user.id, confirmed: false, blocked: false)
+  end
+
+  def created_transaction_params
+    params.permit(:id, :confirmed, :blocked)
   end
 end

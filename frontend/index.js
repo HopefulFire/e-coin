@@ -153,13 +153,27 @@ class Session {
 
 		const transactionProperties = [
 			`ID: ${transaction.id}`,
-			`Amount: ${tranaction.amount}`,
-			`Sender: ${transaction.sender_id}`,
-			`Receiver: ${transaction.receiver_id}`,
-			`Confirmed: ${tranaction.confirmed}`
+			`Amount: ${transaction.amount}`,
+			`Sender: ${transaction.sender}`,
+			`Receiver: ${transaction.receiver}`,
+			`Confirmed: ${transaction.confirmed}`
 		]
 
 		this.util.buildArrayOfProperties(this.mainTag, transactionProperties, "p");
+
+		if (transaction.receiver === this.username) {
+			const confirm = document.createElement("button");
+			confirm.innerText = "Confirm";
+			confirm.className = "btn btn-success";
+
+			confirm.addEventListener("click", () => {
+				this.patchConfirmation(transaction.id).then((transaction) => {
+					this.createTransactionPage(transaction);
+				});
+			});
+
+			this.mainTag.appendChild(confirm);
+		}
 	}
 	createTransactionsPage() {
 		this.startup(this.createTransactionsPage);
@@ -173,12 +187,16 @@ class Session {
 				});
 
 				const transactionProperties = [
-					`Amount: ${tranaction.amount}`,
-					`Sender: ${transaction.sender_id}`, // make usernames later
-					`Receiver: ${transaction.receiver_id}`
+					`Amount: ${transaction.amount}`,
+					`Sender: ${transaction.sender}`, // make usernames later
+					`Receiver: ${transaction.receiver}`
 				];
 
 				this.util.buildArrayOfProperties(transactionATag, transactionProperties, "p");
+
+				transactionATag.appendChild(document.createElement("br"));
+
+				this.mainTag.appendChild(transactionATag);
 			}
 		}); // TODO
 	}
@@ -237,6 +255,15 @@ class Session {
 			this.authorization = tokenInfo.token;
 			this.id = tokenInfo.id;
 			return this.getUserInfo();
+		});
+	}
+	patchConfirmation(transactionId) {
+		return fetch(`${this.BASEURL}/users/${this.id}/transactions/${transactionId}`, {
+			method: "PATCH",
+			headers: this.authorizedHeaders,
+			body: JSON.stringify({confirmed: true})
+		}).then((response) => {
+			return response.json();
 		});
 	}
 	postAccount() {
@@ -336,9 +363,9 @@ class Session {
 		},
 		buildArrayOfProperties: (parent, properties, tag="p") => {
 			for (const property of properties) {
-				const tag = document.createElement(tag);
-				tag.innerText = property;
-				parent.appendChild(tag);
+				const aTag = document.createElement(tag);
+				aTag.innerText = property;
+				parent.appendChild(aTag);
 			}
 		},
 	}
