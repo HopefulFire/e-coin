@@ -10,6 +10,13 @@ class Session {
 		this.startup();
 	}
 
+	checkForErrors(object) {
+		if (object.error) {
+			throw new Error(object.error);
+		} else if (object.errors) {
+			throw new Error('Unknown Error');
+		}
+	}
 	clearMain() {
 		this.mainTag.innerHTML = "";
 	}
@@ -178,8 +185,8 @@ class Session {
 	createTransactionsPage() {
 		this.startup(this.createTransactionsPage);
 
-		this.getTransactions().then(() => {
-			for (const transaction of this.transactions) {
+		this.getTransactions().then((transactions) => {
+			for (const transaction of transactions) {
 				const transactionATag = document.createElement("a");
 				transactionATag.addEventListener("click", (e) => {
 					e.preventDefault;
@@ -198,7 +205,7 @@ class Session {
 
 				this.mainTag.appendChild(transactionATag);
 			}
-		}); // TODO
+		});
 	}
 	createUserPage() {
 		this.startup(this.createUserPage);
@@ -220,8 +227,8 @@ class Session {
 		}).then((response) => {
 			return response.json();
 		}).then((transactions) => {
-			this.transactions = transactions;
-			return;
+			this.checkForErrors(transactions);
+			return transactions;
 		});
 	}
 	getUserInfo() {
@@ -232,6 +239,7 @@ class Session {
 			}).then((response) => {
 				return response.json();
 			}).then((userInfo) => {
+				this.checkForErrors(userInfo);
 				this.id = userInfo.id;
 				this.username = userInfo.username;
 				this.email = userInfo.email;
