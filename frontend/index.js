@@ -22,43 +22,44 @@ class Session {
 	}
 	createAccountPage() {
 		this.startup(null);
-		this.getUserInfo();
+		this.getUserInfo().then((userInfo) => {
+			if (userInfo.account.balance === 0 || userInfo.account.balance) {
+				const balanceH3 = document.createElement("h3");
+				balanceH3.innerText = `Your Balance Is: #${userInfo.account.balance}`;
+				this.mainTag.appendChild(balanceH3);
+				
+				const newTransaction = document.createElement("form");
 
-		if (this.account.balance === 0 || this.account.balance) {
-			const balanceH3 = document.createElement("h3");
-			balanceH3.innerText = `Your Balance Is: #${this.account.balance}`;
-			this.mainTag.appendChild(balanceH3);
-			
-			const newTransaction = document.createElement("form");
+				const labelInputs = [
+					{label: "Transfer Account ID: ", input: "account-id-input", type: "password"},
+					{label: "Transfer Amount: ", input: "amount-input", type: "number"}
+				];
 
-			const labelInputs = [
-				{label: "Transfer Account ID: ", input: "account-id-input", type: "password"},
-				{label: "Transfer Amount: ", input: "amount-input", type: "number"}
-			];
+				this.util.buildFormLabelInputs(newTransaction, labelInputs, "New Transaction");
 
-			this.util.buildFormLabelInputs(newTransaction, labelInputs, "New Transaction");
-
-			newTransaction.addEventListener("submit", (e) => {
-				e.preventDefault();
-				this.postTransaction({
-					receiver_id: document.getElementById("account-id-input").value,
-					amount: document.getElementById("amount-input").value
-				}).then((transaction) => {
-					this.createTransactionPage(transaction);
+				newTransaction.addEventListener("submit", (e) => {
+					e.preventDefault();
+					this.postTransaction({
+						receiver_id: document.getElementById("account-id-input").value,
+						amount: document.getElementById("amount-input").value
+					}).then((transaction) => {
+						this.createTransactionPage(transaction);
+					});
 				});
-			});
 
-			this.mainTag.appendChild(newTransaction);
-		} else {
-			const createAccount = document.createElement("button");
-			createAccount.innerText = "Create An Account"
-			createAccount.addEventListener("click", () => {
-				this.postAccount().then(() => {
-					this.createAccountPage()
+				this.mainTag.appendChild(newTransaction);
+			} else {
+				const createAccount = document.createElement("button");
+				createAccount.innerText = "Create An Account"
+				createAccount.addEventListener("click", () => {
+					this.postAccount().then(() => {
+						this.createAccountPage()
+					});
 				});
-			});
-			this.mainTag.appendChild(createAccount)
-		}
+				this.mainTag.appendChild(createAccount)
+			}	
+		});
+
 	}
 	createLogInPage() {
 		this.startup(null);
@@ -209,16 +210,14 @@ class Session {
 	}
 	createUserPage() {
 		this.startup(this.createUserPage);
-		const userProperties = [
-			`ID: ${this.id}`,
-			`Username: ${this.username}`,
-			`Email: ${this.email}`
-		];
-		for (const property of userProperties) {
-			const pTag = document.createElement("p");
-			pTag.innerText = property;
-			this.mainTag.appendChild(pTag);
-		}
+		this.getUserInfo().then((userInfo) => {
+			const userProperties = [
+				`ID: ${userInfo.id}`,
+				`Username: ${userInfo.username}`,
+				`Email: ${userInfo.email}`
+			];
+			this.util.buildArrayOfProperties(this.mainTag, userProperties, "p");
+		});
 	}
 	getTransactions() {
 		return fetch(`${this.BASEURL}/users/${this.id}/transactions`, {
@@ -240,11 +239,7 @@ class Session {
 				return response.json();
 			}).then((userInfo) => {
 				this.checkForErrors(userInfo);
-				this.id = userInfo.id;
-				this.username = userInfo.username;
-				this.email = userInfo.email;
-				this.account = userInfo.account;
-				return;
+				return userInfo;
 			});
 		}
 	}
