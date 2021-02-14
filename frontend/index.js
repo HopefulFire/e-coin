@@ -255,7 +255,11 @@ class Session {
 		}).then((tokenInfo) => {
 			this.authorization = tokenInfo.token;
 			this.id = tokenInfo.id;
-			return this.getUserInfo();
+			this.getUserInfo().then((userInfo) => {
+				this.username = userInfo.username;
+			}).then(() => {
+				this.startup();
+			});
 		});
 	}
 	patchConfirmation(transactionId) {
