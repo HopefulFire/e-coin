@@ -231,17 +231,15 @@ class Session {
 		});
 	}
 	getUserInfo() {
-		if (this.id) {
-			return fetch(`${this.BASEURL}/users/${this.id}`, {
-				method: "GET",
-				headers: this.authorizedHeaders
-			}).then((response) => {
-				return response.json();
-			}).then((userInfo) => {
-				this.checkForErrors(userInfo);
-				return userInfo;
-			});
-		}
+		return fetch(`${this.BASEURL}/users/${this.id}`, {
+			method: "GET",
+			headers: this.authorizedHeaders
+		}).then((response) => {
+			return response.json();
+		}).then((userInfo) => {
+			this.checkForErrors(userInfo);
+			return userInfo;
+		});
 	}
 	login(email, password) {
 		const credentials = {
