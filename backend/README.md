@@ -1,24 +1,14 @@
-# README
+* Ruby version - `2.6.6`
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+* System dependencies - Rails, Bundler
 
-Things you may want to cover:
+* Configuration - none that I'm aware of
 
-* Ruby version
+* Database creation - `rails db:migrate`
 
-* System dependencies
+* Database initialization - none implemented yet
 
-* Configuration
+* How to run the test suite - none implemented yet
 
-* Database creation
+* Deployment instructions - follow instructions above, run `rails s`
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
