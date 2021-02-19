@@ -7,7 +7,7 @@ class Session {
 		};
 		this.authorization = authorization;
 
-		this.startup();
+		this.startup(null);
 	}
 
 	checkForErrors(object) {
