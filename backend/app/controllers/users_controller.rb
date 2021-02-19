@@ -32,7 +32,7 @@ class UsersController < ApplicationController
   def find_user
     @user = User.find_by(id: params[:id])
     return render json: { error: 'No such user' }, status: :not_found unless @user
-    
+
     render json: { error: 'unauthorized' }, status: :unauthorized unless @user == @current_user
   end
 

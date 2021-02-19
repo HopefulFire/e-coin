@@ -21,8 +21,6 @@ class TransactionsController < ApplicationController
   end
 
   def update
-    return render json: { error: 'forbidden' }, status: :forbidden if @transaction.confirmed
-
     if created_transaction_params[:blocked]
       @transaction.blocked = true
       return render json: { message: 'transaction successfully blocked' }, status: :accepted if @transaction.save
@@ -31,6 +29,8 @@ class TransactionsController < ApplicationController
     end
 
     if created_transaction_params[:confirmed]
+      return render json: { error: 'forbidden' }, status: :forbidden if @transaction.confirmed
+
       @transaction.sender.account.balance -= @transaction.amount
       @transaction.receiver.account.balance += @transaction.amount
       @transaction.confirmed = true

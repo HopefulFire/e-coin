@@ -169,19 +169,28 @@ class Session {
 
 		this.util.buildArrayOfProperties(this.mainTag, transactionProperties, "p");
 
-		if (transaction.receiver_id === this.id) {
-			const confirm = document.createElement("button");
-			confirm.innerText = "Confirm";
-			confirm.className = "btn btn-success";
-
-			confirm.addEventListener("click", () => {
-				this.patchConfirmation(transaction.id).then((transaction) => {
-					this.createTransactionPage(transaction);
-				});
+		const confirm = document.createElement("button");
+		confirm.innerText = "Confirm";
+		confirm.className = "btn btn-success";
+		confirm.addEventListener("click", () => {
+			this.patchConfirmation(transaction.id).then((transaction) => {
+				this.createTransactionPage(transaction);
 			});
+		});
 
+		const block = document.createElement("button");
+		block.innerText = "Block";
+		block.className = "btn btn-danger";
+		block.addEventListener("click", () => {
+			this.patchBlocked(transaction.id).then((transaction) => {
+				this.createTransactionsPage();
+			})
+		});
+
+		if (transaction.receiver_id === this.id && transaction.confirmed === false) {
 			this.mainTag.appendChild(confirm);
 		}
+		this.mainTag.appendChild(block);
 	}
 	createTransactionsPage() {
 		this.startup(this.createTransactionsPage);
@@ -260,6 +269,15 @@ class Session {
 			}).then(() => {
 				this.startup();
 			});
+		});
+	}
+	patchBlocked(transactionId) {
+		return fetch(`${this.BASEURL}/users/${this.id}/transactions/${transactionId}`, {
+			method: "PATCH",
+			headers: this.authorizedHeaders,
+			body: JSON.stringify({blocked: true})
+		}).then((response) => {
+			return response.json();
 		});
 	}
 	patchConfirmation(transactionId) {
